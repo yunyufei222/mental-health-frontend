@@ -47,3 +47,15 @@ request.interceptors.response.use(
 )
 
 export default request
+
+export function formatDate(dateStr) {
+    if (!dateStr) return ''
+    const date = new Date(dateStr)
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+}
+
+export function formatTime(dateStr) {
+    if (!dateStr) return ''
+    const date = new Date(dateStr)
+    return `${formatDate(dateStr)} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+}
