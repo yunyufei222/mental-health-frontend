@@ -9,6 +9,7 @@
         <router-link to="/articles">知识库</router-link>
         <!-- 可在此添加其他链接，如“测评”、“咨询”等 -->
       </div>
+      <router-link to="/user/reads">学习记录</router-link>
       <div class="user-area">
         <template v-if="userStore.isLoggedIn">
           <el-dropdown @command="handleCommand">

@@ -7,6 +7,7 @@ export const useUserStore = defineStore('user', () => {
     const userInfo = ref(null)
 
     const isLoggedIn = computed(() => !!token.value)
+    const isAdmin = computed(() => userInfo.value?.role === 'ADMIN')
 
     function setToken(newToken) {
         token.value = newToken
@@ -23,6 +24,7 @@ export const useUserStore = defineStore('user', () => {
         const res = await apiLogin(credentials)
         setToken(res.data.token)
         userInfo.value = {
+            id: res.data.id,          // 如果需要
             username: res.data.username,
             role: res.data.role,
             nickname: res.data.nickname,
@@ -55,5 +57,14 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
-    return { token, userInfo, isLoggedIn, login, register, logout, fetchUserInfo }
+    return {
+        token,
+        userInfo,
+        isLoggedIn,
+        isAdmin,
+        login,
+        register,
+        logout,
+        fetchUserInfo
+    }
 })

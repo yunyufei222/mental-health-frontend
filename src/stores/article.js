@@ -2,7 +2,8 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import {
     getArticles, getArticleDetail, likeArticle, favoriteArticle,
-    getComments, createComment, deleteComment, likeComment  // 新增导入
+    getComments, createComment, deleteComment, likeComment,
+    getReadHistory
 } from '@/api/article'
 import { ElMessage } from 'element-plus'
 
@@ -16,12 +17,17 @@ export const useArticleStore = defineStore('article', () => {
     const currentArticle = ref(null)
     const articleLoading = ref(false)
 
-    // 评论列表（树形）
+    // 评论
     const comments = ref([])
     const commentsLoading = ref(false)
     const commentTotal = ref(0)
 
-    // 获取文章列表
+    // 学习记录
+    const readHistory = ref([])
+    const readHistoryTotal = ref(0)
+    const readHistoryLoading = ref(false)
+
+    // ---------- 文章操作 ----------
     async function fetchArticles(params) {
         loading.value = true
         try {
@@ -35,7 +41,6 @@ export const useArticleStore = defineStore('article', () => {
         }
     }
 
-    // 获取文章详情
     async function fetchArticleDetail(id) {
         articleLoading.value = true
         try {
@@ -49,11 +54,9 @@ export const useArticleStore = defineStore('article', () => {
         }
     }
 
-    // 点赞/取消点赞文章
     async function toggleLikeArticle(id) {
         try {
             const res = await likeArticle(id)
-            // 更新当前文章的点赞状态和计数
             if (currentArticle.value && currentArticle.value.id === id) {
                 currentArticle.value.likedByCurrentUser = res.data.liked
                 if (res.data.liked) {
@@ -62,7 +65,6 @@ export const useArticleStore = defineStore('article', () => {
                     currentArticle.value.likeCount--
                 }
             }
-            // 同时更新列表中的对应项（可选）
             const articleInList = articles.value.find(a => a.id === id)
             if (articleInList) {
                 articleInList.likedByCurrentUser = res.data.liked
@@ -79,7 +81,6 @@ export const useArticleStore = defineStore('article', () => {
         }
     }
 
-    // 收藏/取消收藏文章
     async function toggleFavoriteArticle(id) {
         try {
             const res = await favoriteArticle(id)
@@ -98,12 +99,12 @@ export const useArticleStore = defineStore('article', () => {
         }
     }
 
-    // 获取评论
+    // ---------- 评论操作 ----------
     async function fetchComments(articleId, page = 0, size = 10) {
         commentsLoading.value = true
         try {
             const res = await getComments(articleId, { page, size })
-            comments.value = res.data.content  // 已经是树形结构（顶级评论带replies）
+            comments.value = res.data.content
             commentTotal.value = res.data.totalElements
         } catch (error) {
             console.error('获取评论失败', error)
@@ -112,11 +113,9 @@ export const useArticleStore = defineStore('article', () => {
         }
     }
 
-    // 发表评论
     async function postComment(articleId, data) {
         try {
             const res = await createComment(articleId, data)
-            // 刷新评论列表（简单重新获取）
             await fetchComments(articleId, 0)
             ElMessage.success('评论发表成功')
             return res.data
@@ -126,11 +125,9 @@ export const useArticleStore = defineStore('article', () => {
         }
     }
 
-    // 删除评论
     async function removeComment(articleId, commentId) {
         try {
             await deleteComment(articleId, commentId)
-            // 重新获取评论列表
             await fetchComments(articleId, 0)
             ElMessage.success('评论删除成功')
         } catch (error) {
@@ -139,11 +136,9 @@ export const useArticleStore = defineStore('article', () => {
         }
     }
 
-    // 点赞评论
     async function toggleLikeComment(articleId, commentId) {
         try {
             const res = await likeComment(articleId, commentId)
-            // 更新评论树中的点赞状态（递归更新）
             const updateCommentLike = (commentsList) => {
                 for (let c of commentsList) {
                     if (c.id === commentId) {
@@ -169,6 +164,20 @@ export const useArticleStore = defineStore('article', () => {
         }
     }
 
+    // ---------- 学习记录 ----------
+    async function fetchReadHistory(page = 0, size = 10) {
+        readHistoryLoading.value = true
+        try {
+            const res = await getReadHistory({ page, size })
+            readHistory.value = res.data.content
+            readHistoryTotal.value = res.data.totalElements
+        } catch (error) {
+            console.error('获取学习记录失败', error)
+        } finally {
+            readHistoryLoading.value = false
+        }
+    }
+
     return {
         articles,
         total,
@@ -178,6 +187,9 @@ export const useArticleStore = defineStore('article', () => {
         comments,
         commentsLoading,
         commentTotal,
+        readHistory,
+        readHistoryTotal,
+        readHistoryLoading,
         fetchArticles,
         fetchArticleDetail,
         toggleLikeArticle,
@@ -186,5 +198,6 @@ export const useArticleStore = defineStore('article', () => {
         postComment,
         removeComment,
         toggleLikeComment,
+        fetchReadHistory,
     }
 })

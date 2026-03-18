@@ -1,6 +1,6 @@
 <template>
   <div class="article-list-container">
-    <!-- 分类筛选 -->
+    <!-- 筛选栏 -->
     <div class="filter-bar">
       <el-select v-model="categoryId" placeholder="全部分类" clearable @change="handleSearch">
         <el-option
@@ -8,6 +8,20 @@
             :key="cat.id"
             :label="cat.name"
             :value="cat.id"
+        />
+      </el-select>
+      <el-select
+          v-model="tagId"
+          placeholder="全部标签"
+          clearable
+          @change="handleSearch"
+          style="width: 180px; margin-left: 15px;"
+      >
+        <el-option
+            v-for="tag in tagStore.tags"
+            :key="tag.id"
+            :label="tag.name"
+            :value="tag.id"
         />
       </el-select>
       <el-input
@@ -23,6 +37,14 @@
           </el-button>
         </template>
       </el-input>
+      <el-button
+          v-if="userStore.isAdmin"
+          type="primary"
+          @click="$router.push('/admin/articles/create')"
+          style="margin-left: auto;"
+      >
+        新建文章
+      </el-button>
     </div>
 
     <!-- 文章列表 -->
@@ -34,12 +56,28 @@
           </div>
           <div class="article-info">
             <h3>{{ article.title }}</h3>
+            <div class="tags" v-if="article.tags && article.tags.length">
+              <el-tag
+                  v-for="tag in article.tags"
+                  :key="tag"
+                  size="small"
+                  effect="plain"
+                  style="margin-right: 5px;"
+              >
+                {{ tag }}
+              </el-tag>
+            </div>
             <p class="summary">{{ article.summary }}</p>
             <div class="meta">
               <span><el-icon><View /></el-icon> {{ article.viewCount }}</span>
               <span><el-icon><Star /></el-icon> {{ article.likeCount }}</span>
               <span><el-icon><Collection /></el-icon> {{ article.favoriteCount }}</span>
               <span class="date">{{ formatDate(article.publishedAt) }}</span>
+            </div>
+            <!-- 管理员操作按钮 -->
+            <div v-if="userStore.isAdmin" class="admin-actions" @click.stop>
+              <el-button size="small" @click="editArticle(article.id)">编辑</el-button>
+              <el-button size="small" type="danger" @click="deleteArticle(article.id)">删除</el-button>
             </div>
           </div>
         </el-card>
@@ -59,18 +97,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useArticleStore } from '@/stores/article.js'
-import { getCategories } from '@/api/article.js'
+import { useUserStore } from '@/stores/user'
+import { useArticleStore } from '@/stores/article'
+import { useTagStore } from '@/stores/tag'
+import { getCategories, deleteArticle } from '@/api/article'
 import { Search, View, Star, Collection } from '@element-plus/icons-vue'
-import { formatDate } from '@/utils/date.js' // 可自行实现
+import { formatDate } from '@/utils/date'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const router = useRouter()
+const userStore = useUserStore()
 const articleStore = useArticleStore()
+const tagStore = useTagStore()
 
 const categories = ref([])
 const categoryId = ref('')
+const tagId = ref('')
 const keyword = ref('')
 const page = ref(1)
 const pageSize = ref(12)
@@ -79,7 +123,7 @@ const pageSize = ref(12)
 const fetchCategories = async () => {
   try {
     const res = await getCategories()
-    categories.value = res.data.content // 假设返回分页对象，取content
+    categories.value = res.data.content
   } catch (error) {
     console.error('获取分类失败', error)
   }
@@ -89,6 +133,7 @@ const fetchCategories = async () => {
 const loadArticles = () => {
   articleStore.fetchArticles({
     categoryId: categoryId.value || undefined,
+    tagId: tagId.value || undefined,
     keyword: keyword.value || undefined,
     page: page.value - 1,
     size: pageSize.value
@@ -108,7 +153,23 @@ const goToDetail = (id) => {
   router.push(`/articles/${id}`)
 }
 
+const editArticle = (id) => {
+  router.push(`/admin/articles/edit/${id}`)
+}
+
+const deleteArticleHandler = async (id) => {
+  try {
+    await ElMessageBox.confirm('确认删除该文章吗？', '提示', { type: 'warning' })
+    await deleteArticle(id)
+    ElMessage.success('删除成功')
+    loadArticles()
+  } catch (error) {
+    if (error !== 'cancel') ElMessage.error('删除失败')
+  }
+}
+
 onMounted(() => {
+  tagStore.fetchTags()
   fetchCategories()
   loadArticles()
 })
@@ -124,6 +185,8 @@ onMounted(() => {
   margin-bottom: 20px;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 .article-card {
   margin-bottom: 20px;
@@ -151,6 +214,9 @@ onMounted(() => {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.tags {
+  margin-bottom: 8px;
+}
 .summary {
   color: #666;
   font-size: 14px;
@@ -164,6 +230,7 @@ onMounted(() => {
   align-items: center;
   font-size: 13px;
   color: #999;
+  margin-bottom: 10px;
 }
 .meta span {
   margin-right: 15px;
@@ -175,6 +242,11 @@ onMounted(() => {
 }
 .date {
   margin-left: auto;
+}
+.admin-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
 }
 .pagination {
   text-align: center;

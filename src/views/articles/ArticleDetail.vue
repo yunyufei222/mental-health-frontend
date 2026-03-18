@@ -1,10 +1,19 @@
 <template>
   <div class="article-detail-container" v-loading="articleStore.articleLoading">
-    <!-- 文章内容（原有部分） -->
     <el-card v-if="articleStore.currentArticle">
       <template #header>
         <div class="article-header">
           <h1>{{ articleStore.currentArticle.title }}</h1>
+          <div class="tags" v-if="articleStore.currentArticle.tags && articleStore.currentArticle.tags.length">
+            <el-tag
+                v-for="tag in articleStore.currentArticle.tags"
+                :key="tag"
+                size="small"
+                style="margin-right: 5px;"
+            >
+              {{ tag }}
+            </el-tag>
+          </div>
           <div class="meta">
             <span>作者：{{ articleStore.currentArticle.author || '未知' }}</span>
             <span>分类：{{ articleStore.currentArticle.categoryName || '未分类' }}</span>
@@ -34,13 +43,12 @@
       <div class="article-content" v-html="articleStore.currentArticle.content"></div>
     </el-card>
 
-    <!-- 评论区（新增） -->
+    <!-- 评论区 -->
     <el-card class="comment-section">
       <template #header>
         <span>评论 ({{ articleStore.commentTotal }})</span>
       </template>
 
-      <!-- 发表评论 -->
       <div class="write-comment" v-if="userStore.isLoggedIn">
         <el-input
             v-model="newComment"
@@ -60,7 +68,6 @@
         </el-alert>
       </div>
 
-      <!-- 评论列表 -->
       <div v-loading="articleStore.commentsLoading" class="comments-list">
         <CommentItem
             v-for="comment in articleStore.comments"
@@ -84,7 +91,7 @@ import { useArticleStore } from '@/stores/article'
 import CommentItem from '@/components/CommentItem.vue'
 import { ElMessage } from 'element-plus'
 import { Star, StarFilled, View } from '@element-plus/icons-vue'
-import { formatDate, formatTime } from '@/utils/date'
+import { formatDate } from '@/utils/date'
 
 const route = useRoute()
 const router = useRouter()
@@ -146,6 +153,7 @@ watch(() => route.params.id, (newId) => {
   padding: 0 20px;
 }
 .article-header h1 { margin-top: 0; margin-bottom: 10px; }
+.tags { margin-bottom: 10px; }
 .meta { color: #666; font-size: 14px; margin-bottom: 15px; }
 .meta span { margin-right: 20px; }
 .stats { display: flex; gap: 10px; }
