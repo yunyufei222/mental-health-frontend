@@ -7,9 +7,10 @@
       </div>
       <div class="nav-links">
         <router-link to="/articles">知识库</router-link>
-        <!-- 可在此添加其他链接，如“测评”、“咨询”等 -->
+        <router-link to="/user/reads">学习记录</router-link>
+        <router-link to="/tools/gratitude">感恩日记</router-link>
+        <router-link to="/tools/gratitude/history">日记历史</router-link>
       </div>
-      <router-link to="/user/reads">学习记录</router-link>
       <div class="user-area">
         <template v-if="userStore.isLoggedIn">
           <el-dropdown @command="handleCommand">
@@ -40,11 +41,11 @@
 </template>
 
 <script setup>
-import {onMounted} from 'vue'
-import {useRouter} from 'vue-router'
-import {useUserStore} from '@/stores/user'
-import {ElMessage} from 'element-plus'
-import {ArrowDown} from '@element-plus/icons-vue'
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { ElMessage } from 'element-plus'
+import { ArrowDown } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -96,9 +97,14 @@ const handleCommand = (command) => {
   text-decoration: none;
 }
 
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
 .nav-links a {
   color: white;
-  margin: 0 15px;
   text-decoration: none;
   font-size: 16px;
 }

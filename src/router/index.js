@@ -53,6 +53,18 @@ const routes = [
         meta: { requiresAuth: true, requiresAdmin: true }
     },
     {
+        path: '/tools/gratitude',
+        name: 'GratitudeEdit',
+        component: () => import('@/views/tools/GratitudeEdit.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/tools/gratitude/history',
+        name: 'GratitudeHistory',
+        component: () => import('@/views/tools/GratitudeHistory.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
         path: '/',
         redirect: '/articles'
     }
