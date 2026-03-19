@@ -10,6 +10,8 @@
         <router-link to="/user/reads">学习记录</router-link>
         <router-link to="/tools/gratitude">感恩日记</router-link>
         <router-link to="/tools/gratitude/history">日记历史</router-link>
+        <router-link to="/assessment">测评中心</router-link>
+        <router-link to="/admin/scales">量表管理</router-link>
       </div>
       <div class="user-area">
         <template v-if="userStore.isLoggedIn">

@@ -65,6 +65,54 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
+        path: '/admin/scales',
+        name: 'ScaleList',
+        component: () => import('@/views/admin/ScaleList.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
+        path: '/admin/scales/create',
+        name: 'ScaleCreate',
+        component: () => import('@/views/admin/ScaleEdit.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
+        path: '/admin/scales/edit/:id',
+        name: 'ScaleEdit',
+        component: () => import('@/views/admin/ScaleEdit.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
+        path: '/admin/scales/:id/questions',
+        name: 'QuestionManage',
+        component: () => import('@/views/admin/QuestionManage.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
+        path: '/assessment',
+        name: 'AssessmentList',
+        component: () => import('@/views/assessment/ScaleList.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/assessment/:id',
+        name: 'Assessment',
+        component: () => import('@/views/assessment/Assessment.vue'),
+        meta: { requiresAuth: false }
+    },
+    {
+        path: '/assessment/result/:id',
+        name: 'AssessmentResult',
+        component: () => import('@/views/assessment/Result.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/assessment/history',
+        name: 'AssessmentHistory',
+        component: () => import('@/views/assessment/History.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
         path: '/',
         redirect: '/articles'
     }
