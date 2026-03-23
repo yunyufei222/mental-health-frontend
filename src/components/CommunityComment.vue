@@ -1,11 +1,12 @@
 <template>
   <div class="comment-item">
+    <!-- 主评论 -->
     <div class="comment-main">
-      <el-avatar :size="32" :src="comment.avatar" />
+      <el-avatar :size="40" :src="comment.avatar" />
       <div class="comment-content">
         <div class="comment-header">
           <span class="nickname">{{ comment.nickname || comment.username }}</span>
-          <span class="time">{{ formatDateTime(comment.createdAt) }}</span>
+          <span class="time">{{ formatTime(comment.createdAt) }}</span>
         </div>
         <div class="comment-body">{{ comment.content }}</div>
         <div class="comment-actions">
@@ -14,6 +15,7 @@
           </span>
           <span class="action" @click="showReply = !showReply">回复</span>
           <span v-if="isOwner" class="action delete" @click="handleDelete">删除</span>
+          <span class="action report" @click="handleReport">举报</span>
         </div>
         <!-- 回复输入框 -->
         <div v-if="showReply" class="reply-input">
@@ -30,15 +32,17 @@
         </div>
       </div>
     </div>
-    <!-- 子评论递归渲染 -->
+
+    <!-- 子评论列表 -->
     <div v-if="comment.replies && comment.replies.length" class="replies">
-      <CommentItem
+      <CommunityComment
           v-for="reply in comment.replies"
           :key="reply.id"
           :comment="reply"
           :post-id="postId"
           @reply-submitted="$emit('reply-submitted')"
           @comment-deleted="$emit('comment-deleted')"
+          @report="$emit('report', $event)"
       />
     </div>
   </div>
@@ -50,14 +54,14 @@ import { useUserStore } from '@/stores/user'
 import { useCommunityStore } from '@/stores/community'
 import { ElMessage } from 'element-plus'
 import { Star } from '@element-plus/icons-vue'
-import { formatDateTime } from '@/utils/date'
+import { formatTime } from '@/utils/date'
 
 const props = defineProps({
   comment: { type: Object, required: true },
-  postId: { type: [String, Number], required: true }
+  postId: { type: [Number, String], required: true }
 })
 
-const emit = defineEmits(['reply-submitted', 'comment-deleted'])
+const emit = defineEmits(['reply-submitted', 'comment-deleted', 'report'])
 
 const userStore = useUserStore()
 const communityStore = useCommunityStore()
@@ -69,15 +73,12 @@ const isOwner = computed(() => {
   return userStore.isLoggedIn && userStore.userInfo?.id === props.comment.userId
 })
 
-const handleLike = async () => {
-  if (!userStore.isLoggedIn) {
-    ElMessage.warning('请先登录')
-    return
-  }
-  // 这里需要后端实现评论点赞，暂未实现，可后续添加
+// 点赞评论（暂未实现，可后续添加）
+const handleLike = () => {
   ElMessage.info('评论点赞功能开发中')
 }
 
+// 提交回复
 const submitReply = async () => {
   if (!replyContent.value.trim()) return
   try {
@@ -91,11 +92,21 @@ const submitReply = async () => {
   } catch (error) {}
 }
 
+// 删除评论
 const handleDelete = async () => {
   try {
     await communityStore.removeComment(props.postId, props.comment.id)
     emit('comment-deleted')
   } catch (error) {}
+}
+
+// 举报评论
+const handleReport = () => {
+  emit('report', {
+    targetType: 'COMMENT',
+    targetId: props.comment.id,
+    content: props.comment.content
+  })
 }
 </script>
 
@@ -152,11 +163,14 @@ const handleDelete = async () => {
 .action.delete:hover {
   color: #f56c6c;
 }
+.action.report:hover {
+  color: #e6a23c;
+}
 .reply-input {
   margin-top: 10px;
 }
 .replies {
-  margin-left: 44px;
+  margin-left: 52px;
   margin-top: 10px;
 }
 </style>

@@ -19,3 +19,5 @@ export function formatTime(dateStr) {
     const minute = String(date.getMinutes()).padStart(2, '0')
     return `${year}-${month}-${day} ${hour}:${minute}`
 }
+
+export const formatDateTime = formatTime;

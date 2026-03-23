@@ -112,6 +112,31 @@ const routes = [
         component: () => import('@/views/assessment/History.vue'),
         meta: { requiresAuth: true }
     },
+    // 社区模块
+    {
+        path: '/community',
+        name: 'Community',
+        component: () => import('@/views/community/PostList.vue'),
+        meta: { requiresAuth: false } // 允许未登录用户浏览
+    },
+    {
+        path: '/community/post/:id',
+        name: 'PostDetail',
+        component: () => import('@/views/community/PostDetail.vue'),
+        meta: { requiresAuth: false }
+    },
+    {
+        path: '/community/create',
+        name: 'CreatePost',
+        component: () => import('@/views/community/PostEdit.vue'),
+        meta: { requiresAuth: false }
+    },
+    {
+        path: '/community/edit/:id',
+        name: 'EditPost',
+        component: () => import('@/views/community/PostEdit.vue'),
+        meta: { requiresAuth: false }
+    },
     {
         path: '/',
         redirect: '/articles'

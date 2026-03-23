@@ -12,6 +12,7 @@
         <router-link to="/tools/gratitude/history">日记历史</router-link>
         <router-link to="/assessment">测评中心</router-link>
         <router-link to="/admin/scales">量表管理</router-link>
+        <router-link to="/community">社区</router-link>
       </div>
       <div class="user-area">
         <template v-if="userStore.isLoggedIn">
