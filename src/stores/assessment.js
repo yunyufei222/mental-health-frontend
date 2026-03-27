@@ -1,35 +1,67 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { submitAssessment, getAssessmentHistory, getAssessmentResult } from '@/api/assessment'
+import {
+    getScales,
+    getScaleDetail,
+    submitAssessment,
+    getAssessmentHistory,
+    getAssessmentResult
+} from '@/api/assessment'
 import { ElMessage } from 'element-plus'
 
-// 解读规则示例（可以根据量表ID和总分生成建议）
-const interpretationRules = {
-    // 繁荣量表 (id=1) 总分范围 8-56，分数越高越繁荣
-    flourishing: (score) => {
-        if (score <= 24) return '您的繁荣感较低，可能需要关注心理状态，尝试积极活动。'
-        if (score <= 40) return '您的繁荣感中等，可以继续保持，多参与有意义的事情。'
-        return '您的繁荣感很高，生活充实，请保持！'
-    },
-    // 更多规则...
-}
-
 export const useAssessmentStore = defineStore('assessment', () => {
-    const result = ref(null)
-    const history = ref([])
-    const historyTotal = ref(0)
+    // 量表列表
+    const scales = ref([])
+    const total = ref(0)
     const loading = ref(false)
 
+    // 当前量表详情
+    const currentScale = ref(null)
+    const detailLoading = ref(false)
+
+    // 测评结果
+    const result = ref(null)
+
+    // 测评历史
+    const history = ref([])
+    const historyTotal = ref(0)
+    const historyLoading = ref(false)
+
+    // 获取量表列表
+    async function fetchScales(page = 0, size = 10) {
+        loading.value = true
+        try {
+            const res = await getScales({ page, size })
+            scales.value = res.data.content
+            total.value = res.data.totalElements
+        } catch (error) {
+            console.error('获取量表列表失败', error)
+        } finally {
+            loading.value = false
+        }
+    }
+
+    // 获取量表详情
+    async function fetchScaleDetail(id) {
+        detailLoading.value = true
+        try {
+            const res = await getScaleDetail(id)
+            currentScale.value = res.data
+            return res.data
+        } catch (error) {
+            console.error('获取量表详情失败', error)
+            ElMessage.error('加载量表失败')
+            throw error
+        } finally {
+            detailLoading.value = false
+        }
+    }
+
+    // 提交测评
     async function submit(data) {
         try {
             const res = await submitAssessment(data)
             result.value = res.data
-            // 可以在前端补充更详细的解读
-            if (result.value.scaleId === 1) { // 假设繁荣量表ID为1
-                result.value.detailedInterpretation = interpretationRules.flourishing(result.value.totalScore)
-            } else {
-                result.value.detailedInterpretation = result.value.interpretation
-            }
             ElMessage.success('测评提交成功')
             return res.data
         } catch (error) {
@@ -38,8 +70,9 @@ export const useAssessmentStore = defineStore('assessment', () => {
         }
     }
 
+    // 获取测评历史
     async function fetchHistory(page = 0, size = 10) {
-        loading.value = true
+        historyLoading.value = true
         try {
             const res = await getAssessmentHistory({ page, size })
             history.value = res.data.content
@@ -47,10 +80,11 @@ export const useAssessmentStore = defineStore('assessment', () => {
         } catch (error) {
             console.error('获取测评历史失败', error)
         } finally {
-            loading.value = false
+            historyLoading.value = false
         }
     }
 
+    // 根据ID获取测评结果
     async function fetchResultById(id) {
         try {
             const res = await getAssessmentResult(id)
@@ -63,12 +97,19 @@ export const useAssessmentStore = defineStore('assessment', () => {
     }
 
     return {
+        scales,
+        total,
+        loading,
+        currentScale,
+        detailLoading,
         result,
         history,
         historyTotal,
-        loading,
+        historyLoading,
+        fetchScales,
+        fetchScaleDetail,
         submit,
         fetchHistory,
-        fetchResultById,
+        fetchResultById
     }
 })

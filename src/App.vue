@@ -13,6 +13,10 @@
         <router-link to="/assessment">测评中心</router-link>
         <router-link to="/admin/scales">量表管理</router-link>
         <router-link to="/community">社区</router-link>
+        <router-link to="/appointment/counselors">咨询预约</router-link>
+        <router-link v-if="userStore.isLoggedIn" to="/appointment/my">我的预约</router-link>
+        <router-link to="/admin/appointments">预约管理</router-link>
+        <router-link to="/assessment/history">测评历史</router-link>
       </div>
       <div class="user-area">
         <template v-if="userStore.isLoggedIn">

@@ -8,6 +8,7 @@ const routes = [
         component: () => import('@/views/Login.vue'),
         meta: { requiresGuest: true }
     },
+
     {
         path: '/register',
         name: 'Register',
@@ -37,6 +38,50 @@ const routes = [
         path: '/user/reads',
         name: 'ReadHistory',
         component: () => import('@/views/user/ReadHistory.vue'),
+        meta: { requiresAuth: true }
+    },
+    // 咨询预约模块
+    {
+        path: '/appointment/counselors',
+        name: 'CounselorList',
+        component: () => import('@/views/appointment/CounselorList.vue'),
+        meta: { requiresAuth: false }  // 允许未登录查看
+    },
+    {
+        path: '/appointment/counselor/:id',
+        name: 'CounselorDetail',
+        component: () => import('@/views/appointment/CounselorDetail.vue'),
+        meta: { requiresAuth: false }
+    },
+    {
+        path: '/appointment/my',
+        name: 'MyAppointments',
+        component: () => import('@/views/appointment/MyAppointments.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/admin/appointments',
+        name: 'AdminAppointment',
+        component: () => import('@/views/admin/AppointmentManage.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    // 管理员预约管理
+    {
+        path: '/admin/appointments',
+        name: 'AdminAppointments',
+        component: () => import('@/views/admin/AppointmentManage.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
+        path: '/assessment/history',
+        name: 'AssessmentHistory',
+        component: () => import('@/views/assessment/History.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/assessment/result/:id',
+        name: 'AssessmentResult',
+        component: () => import('@/views/assessment/Result.vue'),
         meta: { requiresAuth: true }
     },
     // 管理员文章管理
@@ -137,6 +182,7 @@ const routes = [
         component: () => import('@/views/community/PostEdit.vue'),
         meta: { requiresAuth: false }
     },
+
     {
         path: '/',
         redirect: '/articles'
