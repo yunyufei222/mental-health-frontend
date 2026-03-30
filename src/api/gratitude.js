@@ -14,3 +14,7 @@ export function saveTodayJournal(data) {
 export function getJournalHistory(params) {
     return request.get('/tools/gratitude/history', { params })
 }
+
+export function getMonthlyJournal(year, month) {
+    return request.get('/tools/gratitude/monthly', { params: { year, month } })
+}

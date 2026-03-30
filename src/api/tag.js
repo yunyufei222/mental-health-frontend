@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
 // 获取所有标签（管理员）
-export function getTags(params) {
-    return request.get('/admin/tags', { params })
+export function getTags() {
+    return request.get('/public/tags')
 }
 
 // 创建标签

@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
 // ---------- 公开接口 ----------
-// 获取分类列表（管理员接口，实际可能需要公开）
+// 获取分类列表（管理员接口，实际公开）
 export function getCategories() {
-    return request.get('/admin/articles/categories')
+    return request.get('/public/categories')
 }
 
 // 获取文章列表（支持分类、标签、关键词分页）

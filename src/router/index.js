@@ -8,7 +8,6 @@ const routes = [
         component: () => import('@/views/Login.vue'),
         meta: { requiresGuest: true }
     },
-
     {
         path: '/register',
         name: 'Register',
@@ -45,7 +44,7 @@ const routes = [
         path: '/appointment/counselors',
         name: 'CounselorList',
         component: () => import('@/views/appointment/CounselorList.vue'),
-        meta: { requiresAuth: false }  // 允许未登录查看
+        meta: { requiresAuth: false }
     },
     {
         path: '/appointment/counselor/:id',
@@ -59,12 +58,6 @@ const routes = [
         component: () => import('@/views/appointment/MyAppointments.vue'),
         meta: { requiresAuth: true }
     },
-    {
-        path: '/admin/appointments',
-        name: 'AdminAppointment',
-        component: () => import('@/views/admin/AppointmentManage.vue'),
-        meta: { requiresAuth: true, requiresAdmin: true }
-    },
     // 管理员预约管理
     {
         path: '/admin/appointments',
@@ -72,6 +65,7 @@ const routes = [
         component: () => import('@/views/admin/AppointmentManage.vue'),
         meta: { requiresAuth: true, requiresAdmin: true }
     },
+    // 测评历史与结果
     {
         path: '/assessment/history',
         name: 'AssessmentHistory',
@@ -97,6 +91,7 @@ const routes = [
         component: () => import('@/views/admin/ArticleEdit.vue'),
         meta: { requiresAuth: true, requiresAdmin: true }
     },
+    // 感恩日记
     {
         path: '/tools/gratitude',
         name: 'GratitudeEdit',
@@ -109,6 +104,7 @@ const routes = [
         component: () => import('@/views/tools/GratitudeHistory.vue'),
         meta: { requiresAuth: true }
     },
+    // 量表管理（管理员）
     {
         path: '/admin/scales',
         name: 'ScaleList',
@@ -133,28 +129,17 @@ const routes = [
         component: () => import('@/views/admin/QuestionManage.vue'),
         meta: { requiresAuth: true, requiresAdmin: true }
     },
+    // 测评中心（量表列表）
     {
         path: '/assessment',
         name: 'AssessmentList',
         component: () => import('@/views/assessment/ScaleList.vue'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: false }
     },
     {
         path: '/assessment/:id',
         name: 'Assessment',
         component: () => import('@/views/assessment/Assessment.vue'),
-        meta: { requiresAuth: false }
-    },
-    {
-        path: '/assessment/result/:id',
-        name: 'AssessmentResult',
-        component: () => import('@/views/assessment/Result.vue'),
-        meta: { requiresAuth: true }
-    },
-    {
-        path: '/assessment/history',
-        name: 'AssessmentHistory',
-        component: () => import('@/views/assessment/History.vue'),
         meta: { requiresAuth: true }
     },
     // 社区模块
@@ -162,7 +147,7 @@ const routes = [
         path: '/community',
         name: 'Community',
         component: () => import('@/views/community/PostList.vue'),
-        meta: { requiresAuth: false } // 允许未登录用户浏览
+        meta: { requiresAuth: false }
     },
     {
         path: '/community/post/:id',
@@ -182,7 +167,6 @@ const routes = [
         component: () => import('@/views/community/PostEdit.vue'),
         meta: { requiresAuth: false }
     },
-
     {
         path: '/',
         redirect: '/articles'
@@ -194,29 +178,24 @@ const router = createRouter({
     routes
 })
 
-// 全局路由守卫
 router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore()
     const isLoggedIn = userStore.isLoggedIn
 
-    // 如果已登录但未加载用户信息，尝试加载
     if (isLoggedIn && !userStore.userInfo) {
         await userStore.fetchUserInfo()
     }
 
-    // 需要登录但未登录 -> 跳转登录
     if (to.meta.requiresAuth && !isLoggedIn) {
         next('/login')
         return
     }
 
-    // 需要管理员但非管理员 -> 跳转首页
     if (to.meta.requiresAdmin && !userStore.isAdmin) {
         next('/articles')
         return
     }
 
-    // 需要未登录但已登录 -> 跳转首页
     if (to.meta.requiresGuest && isLoggedIn) {
         next('/articles')
         return

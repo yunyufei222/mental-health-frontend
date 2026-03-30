@@ -1,22 +1,13 @@
 <template>
   <div id="app">
-    <!-- 导航栏 -->
     <el-header class="header">
       <div class="logo">
         <router-link to="/">心理健康促进系统</router-link>
       </div>
       <div class="nav-links">
-        <router-link to="/articles">知识库</router-link>
-        <router-link to="/user/reads">学习记录</router-link>
-        <router-link to="/tools/gratitude">感恩日记</router-link>
-        <router-link to="/tools/gratitude/history">日记历史</router-link>
-        <router-link to="/assessment">测评中心</router-link>
-        <router-link to="/admin/scales">量表管理</router-link>
-        <router-link to="/community">社区</router-link>
-        <router-link to="/appointment/counselors">咨询预约</router-link>
-        <router-link v-if="userStore.isLoggedIn" to="/appointment/my">我的预约</router-link>
-        <router-link to="/admin/appointments">预约管理</router-link>
-        <router-link to="/assessment/history">测评历史</router-link>
+        <template v-for="item in visibleMenus" :key="item.path">
+          <router-link :to="item.path">{{ item.name }}</router-link>
+        </template>
       </div>
       <div class="user-area">
         <template v-if="userStore.isLoggedIn">
@@ -40,7 +31,6 @@
       </div>
     </el-header>
 
-    <!-- 主内容区域 -->
     <el-main>
       <router-view />
     </el-main>
@@ -48,34 +38,44 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
+import { MENU_ITEMS } from '@/constants/menu'
 
 const router = useRouter()
 const userStore = useUserStore()
 
-// 页面加载时尝试恢复登录状态
+// 根据用户角色过滤菜单
+const visibleMenus = computed(() => {
+  if (!userStore.isLoggedIn) {
+    // 未登录用户只显示公开菜单（例如知识库、社区等）
+    return MENU_ITEMS.filter(item => item.roles.includes('USER'))
+  }
+  const role = userStore.userInfo?.role
+  if (role === 'ADMIN') return MENU_ITEMS.filter(item => item.roles.includes('ADMIN'))
+  if (role === 'COUNSELOR') return MENU_ITEMS.filter(item => item.roles.includes('COUNSELOR'))
+  return MENU_ITEMS.filter(item => item.roles.includes('USER'))
+})
+
 onMounted(() => {
   if (userStore.token && !userStore.userInfo) {
     userStore.fetchUserInfo()
   }
 })
 
-// 处理下拉菜单命令
 const handleCommand = (command) => {
   if (command === 'logout') {
     userStore.logout()
     ElMessage.success('已退出登录')
     router.push('/login')
   } else if (command === 'profile') {
-    router.push('/profile') // 如果还没实现个人中心，可以暂时跳转首页
+    router.push('/profile')
   }
 }
 </script>
-
 <style>
 * {
   margin: 0;
