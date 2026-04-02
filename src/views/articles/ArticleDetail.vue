@@ -74,6 +74,7 @@
             :key="comment.id"
             :comment="comment"
             :article-id="articleId"
+            :post-id="articleId"
             @reply-submitted="refreshComments"
             @comment-deleted="refreshComments"
         />

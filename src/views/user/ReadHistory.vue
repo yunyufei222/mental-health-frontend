@@ -53,7 +53,11 @@ const goToArticle = (id) => {
   router.push(`/articles/${id}`)
 }
 
-onMounted(loadRecords)
+onMounted(async () => {
+  await loadRecords()
+  console.log('readHistory data:', articleStore.readHistory)
+  console.log('readHistoryTotal:', articleStore.readHistoryTotal)
+})
 </script>
 
 <style scoped>

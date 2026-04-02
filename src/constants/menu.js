@@ -53,5 +53,15 @@ export const MENU_ITEMS = [
         name: '测评历史',
         path: '/assessment/history',
         roles: ['USER']
+    },
+    {
+        name: '我的预约',
+        path: '/counselor/appointments',
+        roles: ['COUNSELOR']   // 咨询师可见
+    },
+    {
+        name: '排班管理',
+        path: '/counselor/schedules',
+        roles: ['COUNSELOR']   // 咨询师可见
     }
 ]

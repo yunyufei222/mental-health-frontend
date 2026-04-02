@@ -142,6 +142,25 @@ const routes = [
         component: () => import('@/views/assessment/Assessment.vue'),
         meta: { requiresAuth: true }
     },
+    // 咨询师模块
+    {
+        path: '/counselor/appointments',
+        name: 'CounselorAppointments',
+        component: () => import('@/views/counselor/AppointmentList.vue'),
+        meta: { requiresAuth: true, requiresCounselor: true }
+    },
+    {
+        path: '/counselor/schedules',
+        name: 'CounselorSchedules',
+        component: () => import('@/views/counselor/ScheduleList.vue'),
+        meta: { requiresAuth: true, requiresCounselor: true }
+    },
+    {
+        path: '/counselor/schedules/add',
+        name: 'CounselorScheduleAdd',
+        component: () => import('@/views/counselor/ScheduleAdd.vue'),
+        meta: { requiresAuth: true, requiresCounselor: true }
+    },
     // 社区模块
     {
         path: '/community',

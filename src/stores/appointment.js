@@ -6,7 +6,8 @@ import {
     getAvailableSchedules,
     createAppointment,
     getMyAppointments,
-    cancelAppointment
+    cancelAppointment,
+    getCounselorAppointments
 } from '@/api/appointment'
 import { ElMessage } from 'element-plus'
 
@@ -15,7 +16,10 @@ export const useAppointmentStore = defineStore('appointment', () => {
     const counselors = ref([])
     const total = ref(0)
     const loading = ref(false)
-
+    // 咨询师自己的预约
+    const counselorAppointments = ref([])
+    const counselorAppointmentsTotal = ref(0)
+    const counselorAppointmentsLoading = ref(false)
     // 当前咨询师详情
     const currentCounselor = ref(null)
     const detailLoading = ref(false)
@@ -103,7 +107,19 @@ export const useAppointmentStore = defineStore('appointment', () => {
             myAppointmentsLoading.value = false
         }
     }
-
+    // 获取咨询师自己的预约列表
+    async function fetchCounselorAppointments(page = 0, size = 10) {
+        counselorAppointmentsLoading.value = true
+        try {
+            const res = await getCounselorAppointments({ page, size })
+            counselorAppointments.value = res.data.content
+            counselorAppointmentsTotal.value = res.data.totalElements
+        } catch (error) {
+            console.error('获取咨询师预约列表失败', error)
+        } finally {
+            counselorAppointmentsLoading.value = false
+        }
+    }
     // 取消预约
     async function cancelAppointmentRequest(id) {
         try {
@@ -190,6 +206,10 @@ export const useAppointmentStore = defineStore('appointment', () => {
         fetchSchedules,
         createAppointmentRequest,
         fetchMyAppointments,
-        cancelAppointmentRequest
+        cancelAppointmentRequest,
+        counselorAppointments,
+        counselorAppointmentsTotal,
+        counselorAppointmentsLoading,
+        fetchCounselorAppointments
     }
 })
