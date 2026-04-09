@@ -15,26 +15,26 @@
           <el-tag :type="getScoreType(row.totalScore)">{{ row.totalScore }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="维度得分" min-width="200">
-        <template #default="{ row }">
-          <div v-if="row.dimensionScores && Object.keys(row.dimensionScores).length">
-            <el-tag
-                v-for="(score, dim) in row.dimensionScores"
-                :key="dim"
-                size="small"
-                style="margin: 2px 4px;"
-            >
-              {{ dim }}: {{ score }}
-            </el-tag>
-          </div>
-          <span v-else class="text-muted">—</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="解读" min-width="200" show-overflow-tooltip>
-        <template #default="{ row }">
-          {{ row.interpretation?.substring(0, 80) }}{{ row.interpretation?.length > 80 ? '...' : '' }}
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="维度得分" min-width="200">-->
+<!--        <template #default="{ row }">-->
+<!--          <div v-if="row.dimensionScores && Object.keys(row.dimensionScores).length">-->
+<!--            <el-tag-->
+<!--                v-for="(score, dim) in row.dimensionScores"-->
+<!--                :key="dim"-->
+<!--                size="small"-->
+<!--                style="margin: 2px 4px;"-->
+<!--            >-->
+<!--              {{ dim }}: {{ score }}-->
+<!--            </el-tag>-->
+<!--          </div>-->
+<!--          <span v-else class="text-muted">—</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="解读" min-width="200" show-overflow-tooltip>-->
+<!--        <template #default="{ row }">-->
+<!--          {{ row.interpretation?.substring(0, 80) }}{{ row.interpretation?.length > 80 ? '...' : '' }}-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="操作" width="120" align="center">
         <template #default="{ row }">
           <el-button type="primary" link @click="viewDetail(row.id)">查看详情</el-button>

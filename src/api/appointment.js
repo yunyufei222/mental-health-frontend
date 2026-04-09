@@ -36,3 +36,12 @@ export function cancelAppointment(id) {
 export function getCounselorAppointments(params) {
     return request.get('/appointments/counselor/my', { params })
 }
+// 咨询师确认预约
+export function confirmAppointmentByCounselor(id) {
+    return request.put(`/appointments/${id}/confirm`)
+}
+
+// 咨询师完成咨询（需后端支持）
+export function completeAppointmentByCounselor(id, feedback) {
+    return request.put(`/appointments/${id}/complete`, { feedback })
+}

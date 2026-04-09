@@ -2,28 +2,28 @@
   <div class="article-list-container">
     <!-- 筛选栏 -->
     <div class="filter-bar">
-      <el-select v-model="categoryId" placeholder="全部分类" clearable @change="handleSearch">
-        <el-option
-            v-for="cat in categories"
-            :key="cat.id"
-            :label="cat.name"
-            :value="cat.id"
-        />
-      </el-select>
-      <el-select
-          v-model="tagId"
-          placeholder="全部标签"
-          clearable
-          @change="handleSearch"
-          style="width: 180px; margin-left: 15px;"
-      >
-        <el-option
-            v-for="tag in tagStore.tags"
-            :key="tag.id"
-            :label="tag.name"
-            :value="tag.id"
-        />
-      </el-select>
+<!--      <el-select v-model="categoryId" placeholder="全部分类" clearable @change="handleSearch">-->
+<!--        <el-option-->
+<!--            v-for="cat in categories"-->
+<!--            :key="cat.id"-->
+<!--            :label="cat.name"-->
+<!--            :value="cat.id"-->
+<!--        />-->
+<!--      </el-select>-->
+<!--      <el-select-->
+<!--          v-model="tagId"-->
+<!--          placeholder="全部标签"-->
+<!--          clearable-->
+<!--          @change="handleSearch"-->
+<!--          style="width: 180px; margin-left: 15px;"-->
+<!--      >-->
+<!--        <el-option-->
+<!--            v-for="tag in tagStore.tags"-->
+<!--            :key="tag.id"-->
+<!--            :label="tag.name"-->
+<!--            :value="tag.id"-->
+<!--        />-->
+<!--      </el-select>-->
       <el-input
           v-model="keyword"
           placeholder="搜索文章标题或摘要"
@@ -70,8 +70,8 @@
             <p class="summary">{{ article.summary }}</p>
             <div class="meta">
               <span><el-icon><View /></el-icon> {{ article.viewCount }}</span>
-              <span><el-icon><Star /></el-icon> {{ article.likeCount }}</span>
-              <span><el-icon><Collection /></el-icon> {{ article.favoriteCount }}</span>
+<!--              <span><el-icon><Star /></el-icon> {{ article.likeCount }}</span>-->
+<!--              <span><el-icon><Collection /></el-icon> {{ article.favoriteCount }}</span>-->
               <span class="date">{{ formatDate(article.publishedAt) }}</span>
             </div>
             <!-- 管理员操作按钮 -->

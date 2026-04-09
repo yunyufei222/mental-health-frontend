@@ -18,7 +18,7 @@
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item command="profile">个人中心</el-dropdown-item>
+                <el-dropdown-item command="dashboard">个人中心</el-dropdown-item>
                 <el-dropdown-item command="logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -71,8 +71,8 @@ const handleCommand = (command) => {
     userStore.logout()
     ElMessage.success('已退出登录')
     router.push('/login')
-  } else if (command === 'profile') {
-    router.push('/profile')
+  } else if (command === 'dashboard') {
+    router.push('/dashboard')
   }
 }
 </script>

@@ -11,14 +11,14 @@
             <div class="counselor-info">
               <h3>{{ counselor.nickname || counselor.username }}</h3>
               <div class="rating">
-                <el-rate v-model="counselor.rating" disabled show-score text-color="#ff9900" score-template="{value}" />
-                <span class="review-count">({{ counselor.reviewCount }}人评价)</span>
+<!--                <el-rate v-model="counselor.rating" disabled show-score text-color="#ff9900" score-template="{value}" />-->
+<!--                <span class="review-count">({{ counselor.reviewCount }}人评价)</span>-->
               </div>
             </div>
           </div>
           <div class="counselor-detail">
             <p class="expertise"><strong>擅长领域：</strong>{{ counselor.expertise || '未填写' }}</p>
-            <p class="price"><strong>咨询费用：</strong>¥{{ counselor.price }}/小时</p>
+<!--            <p class="price"><strong>咨询费用：</strong>¥{{ counselor.price }}/小时</p>-->
             <p class="intro">{{ counselor.introduction?.substring(0, 80) }}...</p>
           </div>
         </el-card>

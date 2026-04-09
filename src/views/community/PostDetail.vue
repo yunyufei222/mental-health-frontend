@@ -41,15 +41,16 @@
       <!-- 统计信息 -->
       <div class="post-stats">
         <span><el-icon><View /></el-icon> {{ communityStore.currentPost.viewCount }}</span>
-        <span @click="handleLike" :class="{ 'liked': communityStore.currentPost.likedByCurrentUser }">
-          <el-icon><Star /></el-icon> {{ communityStore.currentPost.likeCount }}
-        </span>
         <span><el-icon><ChatDotRound /></el-icon> {{ communityStore.currentPost.commentCount }}</span>
+        <span @click="handleLike" :class="{ 'liked': communityStore.currentPost.likedByCurrentUser }">
+<!--          <el-icon><Star /></el-icon> {{ communityStore.currentPost.likeCount }}-->
+        </span>
+<!--        <span><el-icon><ChatDotRound /></el-icon> {{ communityStore.currentPost.commentCount }}</span>-->
       </div>
 
       <!-- 举报按钮（仅登录用户） -->
       <div v-if="userStore.isLoggedIn" class="post-actions">
-        <el-button type="danger" size="small" @click="handleReport">举报</el-button>
+<!--        <el-button type="danger" size="small" @click="handleReport">举报</el-button>-->
       </div>
     </el-card>
 

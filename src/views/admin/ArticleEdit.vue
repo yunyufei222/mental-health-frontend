@@ -8,33 +8,33 @@
         <el-form-item label="标题" required>
           <el-input v-model="form.title" placeholder="请输入标题" />
         </el-form-item>
-        <el-form-item label="分类">
-          <el-select v-model="form.categoryId" placeholder="请选择" clearable>
-            <el-option
-                v-for="cat in categories"
-                :key="cat.id"
-                :label="cat.name"
-                :value="cat.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="标签">
-          <el-select
-              v-model="form.tags"
-              multiple
-              filterable
-              allow-create
-              default-first-option
-              placeholder="请选择或输入标签，回车创建"
-          >
-            <el-option
-                v-for="tag in tagStore.tags"
-                :key="tag.id"
-                :label="tag.name"
-                :value="tag.name"
-            />
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="分类">-->
+<!--          <el-select v-model="form.categoryId" placeholder="请选择" clearable>-->
+<!--            <el-option-->
+<!--                v-for="cat in categories"-->
+<!--                :key="cat.id"-->
+<!--                :label="cat.name"-->
+<!--                :value="cat.id"-->
+<!--            />-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="标签">-->
+<!--          <el-select-->
+<!--              v-model="form.tags"-->
+<!--              multiple-->
+<!--              filterable-->
+<!--              allow-create-->
+<!--              default-first-option-->
+<!--              placeholder="请选择或输入标签，回车创建"-->
+<!--          >-->
+<!--            <el-option-->
+<!--                v-for="tag in tagStore.tags"-->
+<!--                :key="tag.id"-->
+<!--                :label="tag.name"-->
+<!--                :value="tag.name"-->
+<!--            />-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
         <el-form-item label="摘要">
           <el-input v-model="form.summary" type="textarea" :rows="2" placeholder="可选" />
         </el-form-item>
@@ -93,14 +93,14 @@ const form = ref({
 })
 
 // 加载分类列表
-const loadCategories = async () => {
-  try {
-    const res = await getCategories()
-    categories.value = res.data.content || res.data
-  } catch (error) {
-    console.error('获取分类失败', error)
-  }
-}
+// const loadCategories = async () => {
+//   try {
+//     const res = await getCategories()
+//     categories.value = res.data.content || res.data
+//   } catch (error) {
+//     console.error('获取分类失败', error)
+//   }
+// }
 
 // 如果是编辑模式，加载文章详情
 const loadArticle = async () => {

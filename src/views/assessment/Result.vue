@@ -17,11 +17,11 @@
         <div ref="chartRef" style="width: 100%; height: 300px;"></div>
       </div>
 
-      <!-- 详细解读 -->
-      <div class="interpretation">
-        <h4>结果解读</h4>
-        <p>{{ assessmentStore.result.detailedInterpretation || assessmentStore.result.interpretation }}</p>
-      </div>
+<!--      &lt;!&ndash; 详细解读 &ndash;&gt;-->
+<!--      <div class="interpretation">-->
+<!--        <h4>结果解读</h4>-->
+<!--        <p>{{ assessmentStore.result.detailedInterpretation || assessmentStore.result.interpretation }}</p>-->
+<!--      </div>-->
 
       <div class="actions">
         <el-button @click="router.push('/assessment')">返回量表列表</el-button>

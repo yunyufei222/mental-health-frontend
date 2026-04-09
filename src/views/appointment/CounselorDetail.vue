@@ -6,8 +6,8 @@
         <div class="detail-info">
           <h2>{{ store.currentCounselor.nickname || store.currentCounselor.username }}</h2>
           <div class="rating">
-            <el-rate v-model="store.currentCounselor.rating" disabled show-score text-color="#ff9900" />
-            <span class="review-count">({{ store.currentCounselor.reviewCount }}人评价)</span>
+<!--            <el-rate v-model="store.currentCounselor.rating" disabled show-score text-color="#ff9900" />-->
+<!--            <span class="review-count">({{ store.currentCounselor.reviewCount }}人评价)</span>-->
           </div>
         </div>
       </div>
@@ -19,10 +19,10 @@
           <strong>擅长领域：</strong>
           <span>{{ store.currentCounselor.expertise || '未填写' }}</span>
         </div>
-        <div class="info-row">
-          <strong>咨询费用：</strong>
-          <span class="price">¥{{ store.currentCounselor.price }}/小时</span>
-        </div>
+<!--        <div class="info-row">-->
+<!--          <strong>咨询费用：</strong>-->
+<!--          <span class="price">¥{{ store.currentCounselor.price }}/小时</span>-->
+<!--        </div>-->
         <div class="info-row">
           <strong>资质证书：</strong>
           <span>{{ store.currentCounselor.qualification || '未填写' }}</span>
@@ -93,7 +93,7 @@
         </el-form-item>
         <el-form-item label="咨询方式" prop="consultationType">
           <el-radio-group v-model="bookingForm.consultationType">
-            <el-radio value="ONLINE">线上咨询</el-radio>
+<!--            <el-radio value="ONLINE">线上咨询</el-radio>-->
             <el-radio value="OFFLINE">线下咨询</el-radio>
           </el-radio-group>
         </el-form-item>

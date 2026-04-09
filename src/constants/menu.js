@@ -25,6 +25,11 @@ export const MENU_ITEMS = [
         roles: ['USER', 'COUNSELOR', 'ADMIN']
     },
     {
+        name: '测评历史',
+        path: '/assessment/history',
+        roles: ['USER']
+    },
+    {
         name: '量表管理',
         path: '/admin/scales',
         roles: ['ADMIN']
@@ -48,11 +53,6 @@ export const MENU_ITEMS = [
         name: '预约管理',
         path: '/admin/appointments',
         roles: ['ADMIN']   // 管理员和咨询师均可见
-    },
-    {
-        name: '测评历史',
-        path: '/assessment/history',
-        roles: ['USER']
     },
     {
         name: '我的预约',

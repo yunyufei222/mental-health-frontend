@@ -56,15 +56,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useAppointmentStore } from '@/stores/appointment'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import {ref, onMounted} from 'vue'
+import {useAppointmentStore} from '@/stores/appointment'
+import {ElMessage, ElMessageBox} from 'element-plus'
+import {confirmAppointmentByCounselor, completeAppointmentByCounselor} from '@/api/appointment'
 
 const store = useAppointmentStore()
 const page = ref(1)
 const pageSize = ref(10)
 
-// 状态显示
 const getStatusType = (status) => {
   const map = {
     PENDING: 'warning',
@@ -89,26 +89,36 @@ const loadAppointments = () => {
   store.fetchCounselorAppointments(page.value - 1, pageSize.value)
 }
 
-// 确认预约（调用管理员接口，此处简化，实际可能需要单独接口）
-const handleConfirm = (id) => {
-  ElMessageBox.confirm('确认接受该预约吗？', '提示', { type: 'warning' })
-      .then(() => {
-        // 这里需要调用后端接口确认预约，因后端已实现 `/api/admin/appointments/{id}/confirm`，但咨询师可能无权限。
-        // 根据实际权限，可能需要咨询师专用的确认接口。此处暂做演示，实际需补充。
-        ElMessage.success('功能开发中')
-      })
-      .catch(() => {})
+// 确认预约
+const handleConfirm = async (id) => {
+  try {
+    await ElMessageBox.confirm('确认接受该预约吗？', '提示', {type: 'warning'})
+    await confirmAppointmentByCounselor(id)
+    ElMessage.success('预约已确认')
+    loadAppointments() // 刷新列表
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error(error.response?.data?.message || '确认失败')
+    }
+  }
 }
 
 // 完成咨询
-const handleComplete = (id) => {
-  ElMessageBox.prompt('请输入咨询反馈（可选）', '完成咨询', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消'
-  }).then(({ value }) => {
-    // 调用完成咨询接口（需后端支持）
-    ElMessage.success('功能开发中')
-  }).catch(() => {})
+const handleComplete = async (id) => {
+  try {
+    const {value: feedback} = await ElMessageBox.prompt('请输入咨询反馈（可选）', '完成咨询', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      inputValue: ''
+    })
+    await completeAppointmentByCounselor(id, feedback)
+    ElMessage.success('咨询已完成')
+    loadAppointments() // 刷新列表
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error(error.response?.data?.message || '操作失败')
+    }
+  }
 }
 
 onMounted(loadAppointments)
@@ -120,6 +130,7 @@ onMounted(loadAppointments)
   margin: 20px auto;
   padding: 0 20px;
 }
+
 .pagination {
   margin-top: 30px;
   text-align: center;

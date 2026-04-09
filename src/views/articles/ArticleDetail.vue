@@ -16,24 +16,24 @@
           </div>
           <div class="meta">
             <span>作者：{{ articleStore.currentArticle.author || '未知' }}</span>
-            <span>分类：{{ articleStore.currentArticle.categoryName || '未分类' }}</span>
+<!--            <span>分类：{{ articleStore.currentArticle.categoryName || '未分类' }}</span>-->
             <span>发布时间：{{ formatDate(articleStore.currentArticle.publishedAt) }}</span>
           </div>
           <div class="stats">
-            <el-button
-                :type="articleStore.currentArticle.likedByCurrentUser ? 'primary' : 'default'"
-                :icon="Star"
-                @click="handleLikeArticle"
-            >
-              {{ articleStore.currentArticle.likeCount }}
-            </el-button>
-            <el-button
-                :type="articleStore.currentArticle.favoritedByCurrentUser ? 'warning' : 'default'"
-                :icon="StarFilled"
-                @click="handleFavoriteArticle"
-            >
-              {{ articleStore.currentArticle.favoriteCount }}
-            </el-button>
+<!--            <el-button-->
+<!--                :type="articleStore.currentArticle.likedByCurrentUser ? 'primary' : 'default'"-->
+<!--                :icon="Star"-->
+<!--                @click="handleLikeArticle"-->
+<!--            >-->
+<!--              {{ articleStore.currentArticle.likeCount }}-->
+<!--            </el-button>-->
+<!--            <el-button-->
+<!--                :type="articleStore.currentArticle.favoritedByCurrentUser ? 'warning' : 'default'"-->
+<!--                :icon="StarFilled"-->
+<!--                @click="handleFavoriteArticle"-->
+<!--            >-->
+<!--              {{ articleStore.currentArticle.favoriteCount }}-->
+<!--            </el-button>-->
             <el-button :icon="View" disabled>
               {{ articleStore.currentArticle.viewCount }}
             </el-button>
